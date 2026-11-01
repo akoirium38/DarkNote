@@ -6,52 +6,27 @@ Guidance for Claude Code when working in the DarkNote project.
 
 - **IDE:** Visual Studio (solution file: `DarkNote.sln`)
 - **Development methodology:** Waterfall
-- **Backend language:** _Not decided yet. It will be decided in `PRD.md` and recorded here._
+- **Backend language:** C# (decided in `PRD.md`, Part 4)
+- **Tech stack:** WPF on .NET 10 (LTS), MVVM with CommunityToolkit.Mvvm, JSON storage with `System.Text.Json`. See `PRD.md` Part 4 for details.
 
-## Rules
+## General rules
 
-### Language
 - Whatever language the input is in, all output must be in English.
+- Before the development phase (Stage 3) starts, tell the user which languages, technologies, libraries and tools will be used (including the unit test framework).
+- `plan.md` (project root) is the step-by-step checklist of tasks from Stage 2 onward. Mark a task `[x]` as soon as it's done. If `plan.md` is missing, remind the user and help them create it.
+- If a significant mistake is found while coding, run `/learn-by-mistake` to record it in `common_errors.md`.
+- `project-local-note.md` holds the user's own local notes. It is git-ignored and never committed.
 
-### Technologies
-- Before the development phase starts, tell the user which languages and technologies will be used.
+## Waterfall stages
 
-### Backend language and IDE setup
-- Once the backend language is decided in `PRD.md`, record it in this file (under "Project setup") and finish the IDE setup for it:
-  - Add the starter project to `DarkNote.sln` (Visual Studio).
-  - Add language-specific entries to `.gitignore` (e.g. `bin/`, `obj/`).
-- If `PRD.md` doesn't state the backend language (when the PRD is written, or before Stage 2 starts), remind the user and recommend a few options that fit the project's needs. Give a short reason for each and mark one as recommended (C# by default, unless the PRD suggests a better fit). Record the choice in `PRD.md`.
-
-### Plan (`plan.md`)
-- At the start of the project, while designing the stages, if `plan.md` (project root) doesn't exist, remind the user and help them create it.
-- `plan.md` is the checklist / to-do list for each Waterfall stage. Mark a task `[x]` as soon as it's done.
-- Main stages:
-  - **Stage 1: PRD** (sometimes not needed in `plan.md`).
-  - **Stage 2: Design**: one task per workflow, plus database tables, then a cross-check of workflows ↔ DB and user approval. Draw each workflow as a Mermaid flowchart (`flowchart TD`). Recommend covering both the happy path and the edge cases (invalid input, errors, duplicates, timeouts, etc.).
-  - **Stage 3: Implement**: setup tasks first, then one task per function, each mapped to its Stage 2 workflow.
-
-Example `plan.md`:
-
-```
-# Plan & progress
-
-Mark `[x]` as soon as each task is done.
+### Stage 1 — PRD (done)
+- The PRD is `PRD.md`. It is the source of truth for features, rules and the tech stack.
 
 ### Stage 2 — Design
-- [ ] 2.1 Workflow: Register (Mermaid flowchart: happy path + edge cases)
-- [ ] 2.2 Workflow: Log in (Mermaid flowchart: happy path + edge cases)
-- [ ] 2.3 Database design `docs/db-design.md` (ERD, tables, constraints)
-- [ ] 2.4 Cross-check workflows ↔ DB, user approves design
-
-### Stage 3 — Implement
-**Setup**
-- [ ] 3.0.1 Initialize backend + unit test framework
-- [ ] 3.0.2 Database migration and seed data
-
-**Functions**
-- [ ] 3.1 2.1 Register
-- [ ] 3.2 2.2 Log in
-```
+- For each function (feature) in `PRD.md`, create a workflow file: `docs/workflows/<PRD code>-<feature-name>.md` (e.g. `docs/workflows/2.2.1-create-new-note.md`).
+- Each workflow file contains a Mermaid flowchart (`flowchart TD`) that covers both the **happy path** and the **edge cases** (invalid input, errors, duplicates, timeouts, damaged files, etc.), plus a short list of the edge cases in text.
+- Design the data storage (JSON files) in `docs/data-design.md`.
+- Cross-check the workflows against the data design, then get the user's approval before Stage 3.
 
 Example workflow flowchart (happy path + edge cases):
 
@@ -68,8 +43,22 @@ flowchart TD
     G --> H[Show success]
 ```
 
-### Implement stage
-- In Stage 3, implement functions one by one. After each function, stop and wait for the user's go-ahead before starting the next, so they can review it (and possibly use `/explain`).
+### Stage 3 — Implement
+**Setup first:**
+- Set up the needed tools and libraries: the WPF project in `DarkNote.sln`, the unit test project, NuGet packages, bundled fonts and icons, and the C# entries in `.gitignore`.
 
-## Local notes
-- `project-local-note.md` holds the user's own local notes. It is git-ignored and never committed.
+**Then implement functions one by one, in the order in `plan.md`. For each function:**
+1. Create a git branch for it from `main` (e.g. `feature/2.2.1-create-new-note`, see `/git-branch`).
+2. Read the function's workflow file in `docs/workflows/` before coding, and follow it.
+3. Write unit tests for the function, covering the happy path and the edge cases in its workflow.
+4. **Stop and show the test cases to the user. Don't run the tests until the user has checked them.**
+5. Implement the function. Use the Context7 MCP to check the latest syntax and APIs of the libraries and frameworks used (.NET, WPF, CommunityToolkit.Mvvm, test framework, etc.).
+6. Run the tests. If any fail, fix the code (or the test, only if the user agrees the test is wrong) and run again until all tests pass.
+7. Stop and wait for the user to check the function (they may use `/explain`).
+8. When all tests pass and the user has approved, merge the branch into `main` (see `/merge`) and tick the task in `plan.md`.
+9. Don't start the next function until the user gives the go-ahead.
+
+### Stage 4 — Update & new functions
+- Starts only when Stage 3 is complete.
+- Update existing functions and add new ones (e.g. the future ideas in `PRD.md` Part 5: special notes, PIN lock).
+- Each change follows the same flow: add it to `PRD.md` → workflow in `docs/workflows/` → tasks in `plan.md` → branch, tests, user check, implement, all tests pass, user approval, merge.
