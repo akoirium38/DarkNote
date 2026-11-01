@@ -10,13 +10,18 @@ DarkNote has no database. All data is stored as JSON files (`System.Text.Json`) 
 %LOCALAPPDATA%\DarkNote\
 ├─ settings.json          app-wide settings
 ├─ clipboard.json         the Clipboard Note
-└─ notes\
-   ├─ <note-id>.json      one regular note (file name = note id, a GUID)
-   └─ ...
+├─ notes\
+│  ├─ <note-id>.json      one regular note (file name = note id, a GUID)
+│  └─ ...
+└─ logs\
+   ├─ darknote.log        errors and warnings (plain text, not app data)
+   └─ darknote.old.log    previous log, kept when darknote.log passes 1 MB
 ```
 
 - Saving always writes `<file>.tmp` first, then replaces the old file (see [2.4.3](workflows/2.4.3-storage-structure.md)).
-- Damaged files are renamed to `<file>.corrupt` and skipped. Leftover `.tmp` files are deleted at start.
+- Damaged files are renamed to `<file>.corrupt` and skipped (if that name is taken: `<file>.1.corrupt`, `<file>.2.corrupt`, …, so older copies are never overwritten). Leftover `.tmp` files are deleted at start.
+- A file counts as damaged when it is not valid JSON, holds no object, or a field has the wrong JSON type (e.g. text where a number belongs). Unknown enum names and out-of-range values are fixed field by field instead.
+- In code, `WindowState` is the class `WindowBounds` (avoids a clash with WPF's `System.Windows.WindowState`); the JSON is the same.
 
 ```mermaid
 erDiagram
