@@ -1,0 +1,7 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- The 3 note fonts (PRD 2.2.4). JetBrains Mono and Caveat are bundled; Segoe UI ships with Windows. -->
+    <FontFamily x:Key="Font.SegoeUI">Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.JetBrainsMono">pack://application:,,,/DarkNote;component/Resources/Fonts/#JetBrains Mono</FontFamily>
+    <FontFamily x:Key="Font.Caveat">pack://application:,,,/DarkNote;component/Resources/Fonts/#Caveat</FontFamily>
+</ResourceDictionary>

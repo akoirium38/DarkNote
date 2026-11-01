@@ -520,7 +520,7 @@ The table below shows dependencies between features. The feature in the "Feature
   - Built in: bold, italic, underline (`Ctrl + B / I / U`), bullet and numbered lists, undo/redo (`Ctrl + Z / Y`)
   - Custom: strikethrough, checkbox / to-do list, change case (`Shift + F3`)
 - **Clipboard listener:** Windows `AddClipboardFormatListener` (`WM_CLIPBOARDUPDATE`); reads text and file drop lists (file paths); skips copies marked by password managers (`ExcludeClipboardContentFromMonitorProcessing`)
-- **System tray icon:** WPF has no built-in tray icon; use WinForms `NotifyIcon` or a WPF tray library (e.g. H.NotifyIcon.Wpf), chosen in Stage 3 setup
+- **System tray icon:** H.NotifyIcon.Wpf (`TaskbarIcon` with a XAML context menu); chosen over WinForms `NotifyIcon` to avoid `UseWindowsForms` name clashes and keep the dark-themed menu
 - **Single instance:** a named `Mutex`; a second launch signals the running app to show its main page, then exits
 - **Opening folders / apps / links (future special notes):** `Process.Start` with `UseShellExecute`
 
@@ -535,6 +535,13 @@ The table below shows dependencies between features. The feature in the "Feature
 - **Format:** JSON with `System.Text.Json` (one file per note + `settings.json` + `clipboard.json`)
 - **Note content:** saved as `FlowDocument` XAML inside the note's JSON file
 - **Location:** `%LOCALAPPDATA%\<app name>\`
+
+#### Testing
+
+- **Unit tests:** xUnit v3 (Microsoft Testing Platform), project `tests/DarkNote.Tests`
+- **WPF tests:** Xunit.StaFact (`[WpfFact]` / `[WpfTheory]` run on an STA thread, needed for `RichTextBox` / `FlowDocument`)
+- **Fakes:** NSubstitute
+- **Run:** `dotnet test --solution DarkNote.sln` or Visual Studio Test Explorer
 
 #### Other Tools
 
