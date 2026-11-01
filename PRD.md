@@ -399,6 +399,37 @@ The app allows:
 
 ---
 
+### 2.6 System Tray Icon &amp; App Icon
+
+**Actor:** User  
+**Requirement:** App is running
+
+**App icon:**
+
+- One DarkNote icon is shared everywhere: the `.exe`, taskbar, Alt+Tab, the main page, every note window, the Clipboard Note and the system tray
+- Source: an SVG master in `assets/branding/DarkNote.svg`, converted to a multi-size `.ico` (16, 20, 24, 32, 40, 48, 64, 256 px)
+
+**Tray icon:**
+
+- Shown in the Windows notification area while the app is running; tooltip "DarkNote"
+- **Left-click:** shows the main page (restores it and brings it to the front)
+- **Right-click menu:** Open DarkNote, New note, Clipboard Note, Exit
+
+**Flow:**
+
+1. User closes the main page with its X button
+2. The main page is hidden to the tray; the app and all open notes keep running
+3. User clicks the tray icon to show the main page again, or chooses **Exit** from the tray menu to close the app
+
+**Rules:**
+
+- The first time the main page is hidden, a notification says "DarkNote is still running in the system tray"
+- **Exit** saves everything and closes all windows; notes that were open reopen at the next start (2.4.2)
+- Windows sign-out or shutdown behaves like Exit
+- Only one copy of the app can run: starting DarkNote again shows the existing main page
+
+---
+
 ## PART 3: DEPENDENCY TABLE
 
 The table below shows dependencies between features. The feature in the "Feature" column depends on the features listed in the "Depends on" column.
@@ -426,6 +457,7 @@ The table below shows dependencies between features. The feature in the "Feature
 | 18  | Clipboard Item Actions          | 2.3.3 | 2.3.2               | Copy, delete, edit                                        | ⬜ Not started |
 | 19  | History Size Option             | 2.3.4 | 2.3.2               | 5 / 10 / 20 items                                         | ⬜ Not started |
 | 20  | Keyboard Shortcuts              | 2.5   | 2.2.1, 2.2.3        | `Ctrl + N`, undo/redo and formatting shortcuts            | ⬜ Not started |
+| 21  | System Tray Icon &amp; App Icon | 2.6   | 2.1.1, 2.4.2        | Shared app icon, hide main page to tray, single instance  | ⬜ Not started |
 
 
 ### Notes on implementation order:
@@ -457,6 +489,7 @@ The table below shows dependencies between features. The feature in the "Feature
 - 2.4.2 Remember Window State
 - 2.1.2 Search Notes
 - 2.1.3 Sort Notes
+- 2.6 System Tray Icon &amp; App Icon
 
 **Phase 5 - Clipboard Note (Lowest priority):**
 
@@ -487,10 +520,13 @@ The table below shows dependencies between features. The feature in the "Feature
   - Built in: bold, italic, underline (`Ctrl + B / I / U`), bullet and numbered lists, undo/redo (`Ctrl + Z / Y`)
   - Custom: strikethrough, checkbox / to-do list, change case (`Shift + F3`)
 - **Clipboard listener:** Windows `AddClipboardFormatListener` (`WM_CLIPBOARDUPDATE`); reads text and file drop lists (file paths); skips copies marked by password managers (`ExcludeClipboardContentFromMonitorProcessing`)
+- **System tray icon:** WPF has no built-in tray icon; use WinForms `NotifyIcon` or a WPF tray library (e.g. H.NotifyIcon.Wpf), chosen in Stage 3 setup
+- **Single instance:** a named `Mutex`; a second launch signals the running app to show its main page, then exits
 - **Opening folders / apps / links (future special notes):** `Process.Start` with `UseShellExecute`
 
 #### UI Assets
 
+- **App icon:** `assets/branding/DarkNote.svg` (master) → multi-size `DarkNote.ico`, set as `<ApplicationIcon>`; windows don't set their own `Icon`, so they all use the app icon
 - **Icons:** Lucide (SVG path data stored as XAML resources)
 - **Fonts:** Segoe UI (built into Windows), JetBrains Mono, Caveat (both SIL Open Font License, bundled with the app as resources)
 
@@ -531,7 +567,6 @@ Other future features:
 
 ### Ideas to Consider (Not Yet In Scope)
 
-- System tray icon
 - Collapse a note to just its banner
 - Opacity returns to full on hover
 - Trash: keep deleted notes for a while so they can be restored
