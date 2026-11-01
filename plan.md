@@ -47,13 +47,13 @@ Each workflow goes in `docs/workflows/<PRD code>-<name>.md` as a Mermaid flowcha
 For each function: branch → read workflow → write unit tests → user checks tests → implement (Context7 for latest syntax) → run tests, fix until all pass → user checks → merge into `main`.
 
 **Setup**
-- [ ] 3.0.1 Confirm languages, technologies, libraries and test framework with the user (incl. the tray icon library)
-- [ ] 3.0.2 Create the WPF project (.NET 10) and add it to `DarkNote.sln`
-- [ ] 3.0.3 Create the unit test project and add it to `DarkNote.sln`
-- [ ] 3.0.4 Add NuGet packages (CommunityToolkit.Mvvm, test libraries, tray icon library)
-- [ ] 3.0.5 Bundle fonts (JetBrains Mono, Caveat) and Lucide icons as resources
-- [ ] 3.0.6 App icon: convert `assets/branding/DarkNote.svg` to a multi-size `DarkNote.ico`, set `<ApplicationIcon>` in the project
-- [ ] 3.0.7 Add C# entries to `.gitignore` (`bin/`, `obj/`, `TestResults/`)
+- [x] 3.0.1 Confirm languages, technologies, libraries and test framework with the user (incl. the tray icon library)
+- [x] 3.0.2 Create the WPF project (.NET 10) and add it to `DarkNote.sln`
+- [x] 3.0.3 Create the unit test project and add it to `DarkNote.sln`
+- [x] 3.0.4 Add NuGet packages (CommunityToolkit.Mvvm, test libraries, tray icon library)
+- [x] 3.0.5 Bundle fonts (JetBrains Mono, Caveat) and Lucide icons as resources
+- [x] 3.0.6 App icon: convert `assets/branding/DarkNote.svg` to a multi-size `DarkNote.ico`, set `<ApplicationIcon>` in the project
+- [x] 3.0.7 Add C# entries to `.gitignore` (`bin/`, `obj/`, `TestResults/`)
 
 **Functions**
 - [ ] 3.1 Storage Structure (2.1)

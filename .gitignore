@@ -47,3 +47,9 @@ coverage/
 
 # Personal local notes (not committed)
 project-local-note.md
+
+# .NET / C# build output
+bin/
+obj/
+TestResults/
+*.nupkg

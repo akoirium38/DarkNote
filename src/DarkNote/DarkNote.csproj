@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- One app icon everywhere (.exe, taskbar, Alt+Tab, windows, tray). PRD 2.6 -->
+    <ApplicationIcon>Resources\Branding\DarkNote.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Bundled fonts (SIL OFL) and the app icon, embedded as WPF resources -->
+    <Resource Include="Resources\Fonts\*.ttf" />
+    <Resource Include="Resources\Branding\DarkNote.ico" />
+    <None Include="Resources\Fonts\OFL-*.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Resources\Icons\LICENSE" CopyToOutputDirectory="PreserveNewest" Link="Licenses\Lucide-LICENSE.txt" />
+  </ItemGroup>
+
+</Project>
